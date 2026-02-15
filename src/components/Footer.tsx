@@ -43,13 +43,13 @@ export default function Footer() {
                 <Mail className="w-4 h-4" />
                 <span>franchise@fruitasty.in</span>
               </a>
-              <a href="tel:+919876543210" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors text-sm">
+              <a href="tel:+9172218 92189" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors text-sm">
                 <Phone className="w-4 h-4" />
-                <span>+91 98765 43210</span>
+                <span>+91 72218 92189</span>
               </a>
               <div className="flex items-center space-x-2 text-gray-400 text-sm">
                 <MapPin className="w-4 h-4" />
-                <span>India</span>
+                <span>Hyderabad,kompally </span>
               </div>
             </div>
           </div>

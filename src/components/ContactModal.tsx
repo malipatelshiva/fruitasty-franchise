@@ -195,7 +195,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   {/* BUDGET */}
                   <div>
                     <p className="font-semibold">Investment Budget *</p>
-                    {["Below ₹3 Lakhs","₹3 – ₹5 Lakhs","₹5 – ₹8 Lakhs","Above ₹8 Lakhs"].map(opt=>(
+                    {["₹3 – ₹5 Lakhs","₹5 – ₹8 Lakhs","Above ₹8 Lakhs"].map(opt=>(
                       <label key={opt} className="block text-sm mt-1">
                         <input type="radio" name="budget" value={opt}
                         onChange={(e)=>setFormData({...formData,budget:e.target.value})}/> {opt}

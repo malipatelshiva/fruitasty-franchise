@@ -1,29 +1,22 @@
 import { motion } from 'framer-motion';
 import { Link, useOutletContext } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Clock, Shield, Award, Heart, Zap, Users } from 'lucide-react';
+import { ArrowRight, CheckCircle, Shield, Award, Heart, Users, Sparkles, Utensils } from 'lucide-react';
 import FloatingFruits from '../components/FloatingFruits';
 
 export default function Home() {
 
-  // 🔴 Connect page to Layout global modal
   const { onContactClick } = useOutletContext<{ onContactClick: () => void }>();
 
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
-    animate: { opacity: 1, y: 0 },
+    whileInView: { opacity: 1, y: 0 },
     transition: { duration: 0.6 },
-  };
-
-  const staggerChildren = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+    viewport: { once: true }
   };
 
   return (
     <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50">
+
       <FloatingFruits />
 
       {/* HERO */}
@@ -36,14 +29,15 @@ export default function Home() {
             className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
           >
             <span className="bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
-              Fresh Brands.
+              Freshness You Can Taste.
             </span>
             <br />
-            <span className="text-gray-900">Proven Business.</span>
+            <span className="text-gray-900">Health You Can Trust.</span>
           </motion.h1>
 
           <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto">
-            Juices, Burgers and Waffles — All under one trusted franchise brand.
+            At Fruitasty, we believe real health begins with real fruits.
+            Every juice, smoothie and bowl is prepared fresh right in front of you.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -67,44 +61,115 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHY FRUITASTY */}
-      <section className="py-20 bg-white/50">
-        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
+      {/* ABOUT FRUITASTY */}
+      <section className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-4 text-center">
 
-          {[
-            { icon: Heart, title: 'Fresh Daily', desc: 'Prepared in front of customers' },
-            { icon: Shield, title: 'Hygienic', desc: 'Clean & safe food handling' },
-            { icon: Award, title: '12+ Years', desc: 'Proven brand trust' },
-            { icon: Users, title: 'High Demand', desc: 'Repeat customers everyday' },
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              variants={fadeInUp}
-              whileHover={{ y: -10 }}
-              className="bg-white p-8 rounded-2xl shadow-lg text-center"
-            >
-              <item.icon className="w-10 h-10 text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold">{item.title}</h3>
-              <p className="text-gray-600">{item.desc}</p>
-            </motion.div>
-          ))}
+          <motion.h2 {...fadeInUp} className="text-4xl font-bold mb-6">
+            Pure Freshness. No Compromise.
+          </motion.h2>
+
+          <motion.p {...fadeInUp} className="text-lg text-gray-600 max-w-3xl mx-auto">
+            No artificial colors. No fake flavors. Just pure fruits, strict hygiene
+            standards and carefully selected ingredients — served fresh every day.
+          </motion.p>
 
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 bg-green-600 text-white text-center">
+      {/* WHAT WE SERVE */}
+      <section className="py-20 bg-green-50">
+        <div className="max-w-7xl mx-auto px-4">
+
+          <h2 className="text-4xl font-bold text-center mb-14">🌿 What We Serve</h2>
+
+          <div className="grid md:grid-cols-3 gap-8">
+
+            {[
+              "Fresh Fruit Juices",
+              "Smoothies & Shakes",
+              "Fruit Bowls",
+              "Waffles",
+              "Mojitos & Iced Teas",
+              "Frappes"
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                {...fadeInUp}
+                className="bg-white p-8 rounded-2xl shadow-lg flex items-center gap-4"
+              >
+                <Utensils className="text-green-600" />
+                <span className="text-lg font-semibold">{item}</span>
+              </motion.div>
+            ))}
+
+          </div>
+
+          <p className="text-center mt-10 text-gray-600 text-lg">
+            All items are 100% vegetarian, freshly prepared and quality checked.
+          </p>
+
+        </div>
+      </section>
+
+      {/* HYGIENE */}
+      <section className="py-20 bg-white text-center">
+        <h2 className="text-4xl font-bold mb-6">🧼 Hygiene First, Always</h2>
+
+        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          Clean kitchens, sanitized equipment, RO water, gloves & caps mandatory —
+          because your health matters.
+        </p>
+
+        <div className="grid md:grid-cols-4 gap-8 mt-14 max-w-6xl mx-auto px-4">
+          {["RO Water", "Sanitized Equipment", "Gloves & Caps", "Daily Cleaning"].map((item, i) => (
+            <div key={i} className="bg-green-50 p-6 rounded-xl">
+              <Shield className="mx-auto mb-3 text-green-600" />
+              <p className="font-semibold">{item}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* WHY FRUITASTY */}
+      <section className="py-20 bg-green-600 text-white">
+        <div className="max-w-7xl mx-auto px-4">
+
+          <h2 className="text-4xl font-bold text-center mb-14">🚀 Why Fruitasty?</h2>
+
+          <div className="grid md:grid-cols-5 gap-8 text-center">
+
+            {[
+              "Affordable healthy menu",
+              "High repeat customers",
+              "Fast service model",
+              "Easy operations",
+              "Perfect for streets, malls & hospitals"
+            ].map((item, index) => (
+              <div key={index} className="bg-white/10 p-6 rounded-2xl backdrop-blur">
+                <CheckCircle className="mx-auto mb-3" />
+                <p>{item}</p>
+              </div>
+            ))}
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="py-20 bg-white text-center">
         <h2 className="text-4xl font-bold mb-6">
           Ready to Start Your Success Story?
         </h2>
 
-        <p className="text-xl mb-8">
+        <p className="text-xl mb-8 text-gray-600">
           Become a Fruitasty franchise partner today
         </p>
 
         <button
           onClick={onContactClick}
-          className="bg-white text-green-600 px-10 py-5 rounded-full text-xl font-semibold hover:scale-105 transition"
+          className="bg-green-600 text-white px-10 py-5 rounded-full text-xl font-semibold hover:scale-105 transition"
         >
           Apply For Franchise
         </button>

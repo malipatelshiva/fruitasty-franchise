@@ -1,12 +1,17 @@
-import { motion } from 'framer-motion';
-import { Apple } from 'lucide-react';
-import { useOutletContext } from 'react-router-dom';
-import FloatingFruits from '../components/FloatingFruits';
+import { motion } from "framer-motion";
+import { Apple } from "lucide-react";
+import { useOutletContext } from "react-router-dom";
+import { useState } from "react";
+import FloatingFruits from "../components/FloatingFruits";
+import MenuModal from "../components/MenuModal";
 
 export default function Brands() {
 
-  // 🔴 Connect to Layout modal
+  // connect global franchise modal (Layout)
   const { onContactClick } = useOutletContext<{ onContactClick: () => void }>();
+
+  // MENU MODAL STATE
+  const [menuBrand, setMenuBrand] = useState<"fruitasty" | "burgerz" | "waffles" | null>(null);
 
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
@@ -14,38 +19,33 @@ export default function Brands() {
     transition: { duration: 0.6 },
   };
 
-  const staggerChildren = {
-    animate: {
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
   const brands = [
     {
-      name: 'Fruitasty',
-      icon: '🍹',
-      tagline: 'Fresh & Healthy Refreshments',
+      name: "Fruitasty",
+      icon: "🍹",
+      tagline: "Fresh & Healthy Refreshments",
       description:
-        'Our flagship brand offering fresh juices, smoothies, shakes, and fruit bowls made from premium quality fruits.',
-      gradient: 'from-green-400 to-emerald-500',
+        "Our flagship brand offering fresh juices, smoothies, shakes, and fruit bowls made from premium quality fruits.",
+      gradient: "from-green-400 to-emerald-500",
+      key: "fruitasty",
     },
     {
-      name: 'Burgerz',
-      icon: '🍔',
-      tagline: 'Juicy Burgers for Every Craving',
+      name: "Burgerz",
+      icon: "🍔",
+      tagline: "Juicy Burgers for Every Craving",
       description:
-        'Affordable, delicious burgers crafted for youth and families with simple operations and high demand.',
-      gradient: 'from-orange-400 to-red-500',
+        "Affordable, delicious burgers crafted for youth and families with simple operations and high demand.",
+      gradient: "from-orange-400 to-red-500",
+      key: "burgerz",
     },
     {
-      name: 'Yum Yum Waffles',
-      icon: '🧇',
-      tagline: 'Belgian Waffles with Premium Toppings',
+      name: "Yum Yum Waffles",
+      icon: "🧇",
+      tagline: "Belgian Waffles with Premium Toppings",
       description:
-        'Authentic Belgian waffles served with premium toppings and strong visual appeal for customers.',
-      gradient: 'from-amber-400 to-yellow-500',
+        "Authentic Belgian waffles served with premium toppings and strong visual appeal for customers.",
+      gradient: "from-amber-400 to-yellow-500",
+      key: "waffles",
     },
   ];
 
@@ -80,6 +80,9 @@ export default function Brands() {
             <motion.div
               key={index}
               variants={fadeInUp}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
               whileHover={{ y: -10, scale: 1.04 }}
               className="bg-white p-8 rounded-3xl shadow-xl border"
             >
@@ -93,11 +96,20 @@ export default function Brands() {
 
               <p className="text-gray-600 mb-6">{brand.description}</p>
 
+              {/* VIEW MENU BUTTON */}
+              <button
+                onClick={() => setMenuBrand(brand.key as "fruitasty" | "burgerz" | "waffles")}
+                className={`w-full bg-gradient-to-r ${brand.gradient} text-white py-3 rounded-full font-semibold hover:shadow-xl hover:scale-105 transition`}
+              >
+                View Menu
+              </button>
+
+              {/* FRANCHISE BUTTON */}
               <button
                 onClick={onContactClick}
-                className={`w-full bg-gradient-to-r ${brand.gradient} text-white py-3 rounded-full font-semibold hover:shadow-xl transition`}
+                className="w-full mt-3 border border-green-600 text-green-600 py-3 rounded-full font-semibold hover:bg-green-50 transition"
               >
-                Get This Brand
+                Get Franchise
               </button>
             </motion.div>
           ))}
@@ -122,6 +134,14 @@ export default function Brands() {
           Get Franchise Details
         </button>
       </section>
+
+      {/* MENU MODAL (VERY IMPORTANT) */}
+      <MenuModal
+        isOpen={menuBrand !== null}
+        brand={menuBrand}
+        onClose={() => setMenuBrand(null)}
+      />
+
     </div>
   );
 }

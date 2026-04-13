@@ -76,8 +76,8 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
     try {
       await emailjs.send(
-        "service_8appqe7",        // ✅ your Service ID
-        "template_t2v8rno",       // ✅ your Template ID
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
           name: formData.name,
           phone: formData.phone,
@@ -88,7 +88,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           sop: formData.sopAgreement,
           consent: formData.consent ? "Accepted" : "No",
         },
-        "9ITs0pGat0pu-CZqP"       // ✅ your Public Key
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
 
       setIsSuccess(true);
@@ -146,7 +146,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
                 <h3 className="text-2xl font-bold mt-4">Enquiry Submitted!</h3>
                 <p className="text-gray-600 mt-2">
-                  Our Farmfresh Juice team will contact you shortly.
+                  Our Fruitasty team will contact you shortly.
                 </p>
               </div>
             ) : (
@@ -162,35 +162,99 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 {/* FORM */}
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
 
+                  {/* NAME */}
                   <input
                     type="text"
                     placeholder="Full Name *"
                     value={formData.name}
                     onChange={(e)=>setFormData({...formData,name:e.target.value})}
-                    className="w-full border p-3 rounded-lg"
+                    className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-green-500"
                   />
+                  {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
 
+                  {/* PHONE */}
                   <input
                     type="tel"
                     placeholder="Mobile Number *"
                     value={formData.phone}
                     onChange={(e)=>setFormData({...formData,phone:e.target.value})}
-                    className="w-full border p-3 rounded-lg"
+                    className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-green-500"
                   />
+                  {errors.phone && <p className="text-red-500 text-xs">{errors.phone}</p>}
 
+                  {/* CITY */}
                   <input
                     type="text"
-                    placeholder="City *"
+                    placeholder="City / Location Interested *"
                     value={formData.city}
                     onChange={(e)=>setFormData({...formData,city:e.target.value})}
-                    className="w-full border p-3 rounded-lg"
+                    className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-green-500"
                   />
+                  {errors.city && <p className="text-red-500 text-xs">{errors.city}</p>}
 
+                  {/* BUDGET */}
+                  <div>
+                    <p className="font-semibold">Investment Budget *</p>
+                    {["Below ₹3 Lakhs","₹3 – ₹5 Lakhs","₹5 – ₹8 Lakhs","Above ₹8 Lakhs"].map(opt=>(
+                      <label key={opt} className="block text-sm mt-1">
+                        <input type="radio" name="budget" value={opt}
+                        onChange={(e)=>setFormData({...formData,budget:e.target.value})}/> {opt}
+                      </label>
+                    ))}
+                    {errors.budget && <p className="text-red-500 text-xs">{errors.budget}</p>}
+                  </div>
+
+                  {/* START TIME */}
+                  <div>
+                    <p className="font-semibold">When do you plan to start? *</p>
+                    {["Immediately","Within 1 month","Within 3 months","Just exploring"].map(opt=>(
+                      <label key={opt} className="block text-sm mt-1">
+                        <input type="radio" name="start"
+                        onChange={(e)=>setFormData({...formData,startTime:e.target.value})}/> {opt}
+                      </label>
+                    ))}
+                    {errors.startTime && <p className="text-red-500 text-xs">{errors.startTime}</p>}
+                  </div>
+
+                  {/* MANAGER */}
+                  <div>
+                    <p className="font-semibold">Who will manage the outlet? *</p>
+                    {["Self","Family Member","Manager"].map(opt=>(
+                      <label key={opt} className="block text-sm mt-1">
+                        <input type="radio" name="manager"
+                        onChange={(e)=>setFormData({...formData,manager:e.target.value})}/> {opt}
+                      </label>
+                    ))}
+                    {errors.manager && <p className="text-red-500 text-xs">{errors.manager}</p>}
+                  </div>
+
+                  {/* SOP */}
+                  <div>
+                    <p className="font-semibold">Follow Fruitasty SOPs & guidelines? *</p>
+                    {["Yes","No"].map(opt=>(
+                      <label key={opt} className="block text-sm mt-1">
+                        <input type="radio" name="sop"
+                        onChange={(e)=>setFormData({...formData,sopAgreement:e.target.value})}/> {opt}
+                      </label>
+                    ))}
+                    {errors.sopAgreement && <p className="text-red-500 text-xs">{errors.sopAgreement}</p>}
+                  </div>
+
+                  {/* CONSENT */}
+                  <label className="flex items-start gap-2 text-sm">
+                    <input type="checkbox"
+                    onChange={(e)=>setFormData({...formData,consent:e.target.checked})}/>
+                    I confirm that the above information is correct and I am genuinely interested in owning a Fruitasty franchise.
+                  </label>
+                  {errors.consent && <p className="text-red-500 text-xs">{errors.consent}</p>}
+
+                  {/* SUBMIT */}
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-green-600 text-white py-3 rounded-lg"
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:shadow-lg"
                   >
+                    <Send size={18}/>
                     {isSubmitting ? "Sending..." : "Submit Enquiry"}
                   </button>
 

@@ -3,15 +3,25 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, CheckCircle } from "lucide-react";
 import emailjs from "@emailjs/browser";
 
-export default function ContactModal({ isOpen, onClose }) {
+interface ContactModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     city: "",
+    budget: "",
+    startTime: "",
+    manager: "",
+    sopAgreement: "",
+    consent: false,
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -19,25 +29,28 @@ export default function ContactModal({ isOpen, onClose }) {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
   }, [isOpen]);
 
+  // ✅ VALIDATION
   const validate = () => {
-    let newErrors = {};
+    const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) newErrors.name = "Full name required";
-
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone required";
-    } else if (!/^[6-9]\d{9}$/.test(formData.phone)) {
-      newErrors.phone = "Invalid number";
-    }
+    if (!formData.name.trim()) newErrors.name = "Full name is required";
+    if (!formData.phone.trim()) newErrors.phone = "Mobile number required";
+    else if (!/^[6-9]\d{9}$/.test(formData.phone))
+      newErrors.phone = "Enter valid Indian mobile number";
 
     if (!formData.city.trim()) newErrors.city = "City required";
+    if (!formData.budget) newErrors.budget = "Select budget";
+    if (!formData.startTime) newErrors.startTime = "Select timeline";
+    if (!formData.manager) newErrors.manager = "Select manager";
+    if (!formData.sopAgreement) newErrors.sopAgreement = "Select yes/no";
+    if (!formData.consent) newErrors.consent = "Accept consent";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // ✅ FINAL EMAILJS SUBMIT
-  const handleSubmit = async (e) => {
+  // ✅ SUBMIT
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
@@ -45,15 +58,20 @@ export default function ContactModal({ isOpen, onClose }) {
 
     try {
       await emailjs.send(
-        "service_8appqe7",        // ✅ your service id
-        "template_t2v8rno",       // ✅ your template id
+        "service_8appqe7",      // ✅ your service id
+        "template_t2v8rno",     // ✅ your template id
         {
           name: formData.name,
           phone: formData.phone,
           city: formData.city,
+          budget: formData.budget,
+          start_time: formData.startTime,
+          manager: formData.manager,
+          sop: formData.sopAgreement,
+          consent: formData.consent ? "Accepted" : "No",
           time: new Date().toLocaleString(),
         },
-        "9ITs0pGat0pu-CZqP"       // ✅ your public key
+        "9ITs0pGat0pu-CZqP"     // ✅ your public key
       );
 
       setIsSuccess(true);
@@ -65,12 +83,17 @@ export default function ContactModal({ isOpen, onClose }) {
           name: "",
           phone: "",
           city: "",
+          budget: "",
+          startTime: "",
+          manager: "",
+          sopAgreement: "",
+          consent: false,
         });
-      }, 2000);
+      }, 2500);
 
-    } catch (err) {
-      console.error("EMAIL ERROR:", err);
-      alert("Failed to send enquiry");
+    } catch (error) {
+      console.error("EMAIL ERROR:", error);
+      alert("Failed to send enquiry. Check EmailJS setup.");
     } finally {
       setIsSubmitting(false);
     }
@@ -81,6 +104,7 @@ export default function ContactModal({ isOpen, onClose }) {
       {isOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
 
+          {/* BACKDROP */}
           <motion.div
             className="absolute inset-0 bg-black/70"
             initial={{ opacity: 0 }}
@@ -89,28 +113,28 @@ export default function ContactModal({ isOpen, onClose }) {
             onClick={onClose}
           />
 
+          {/* MODAL */}
           <motion.div
-            className="relative bg-white w-full max-w-md rounded-2xl p-6 shadow-xl"
+            className="relative bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl"
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
           >
 
             {isSuccess ? (
               <div className="text-center py-10">
-                <CheckCircle className="w-14 h-14 text-green-500 mx-auto" />
-                <h2 className="mt-3 text-xl font-bold">
+                <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
+                <h3 className="text-2xl font-bold mt-3">
                   Enquiry Submitted ✅
-                </h2>
+                </h3>
                 <p className="text-gray-600">
-                  Our team will contact you soon
+                  We will contact you soon
                 </p>
               </div>
             ) : (
               <>
-                {/* ✅ UPDATED TITLE */}
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-bold">
-                    Farmfresh Juice Franchise Enquiry
+                <div className="flex justify-between mb-4">
+                  <h2 className="font-bold text-lg">
+                    Fruitasty Franchise Enquiry
                   </h2>
                   <button onClick={onClose}>
                     <X />
@@ -122,40 +146,34 @@ export default function ContactModal({ isOpen, onClose }) {
                   <input
                     type="text"
                     placeholder="Full Name"
-                    className="w-full border p-3 rounded-lg"
+                    className="w-full border p-3 rounded"
                     value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
+                    onChange={(e)=>setFormData({...formData,name:e.target.value})}
                   />
 
                   <input
                     type="tel"
                     placeholder="Mobile Number"
-                    className="w-full border p-3 rounded-lg"
+                    className="w-full border p-3 rounded"
                     value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
+                    onChange={(e)=>setFormData({...formData,phone:e.target.value})}
                   />
 
                   <input
                     type="text"
                     placeholder="City"
-                    className="w-full border p-3 rounded-lg"
+                    className="w-full border p-3 rounded"
                     value={formData.city}
-                    onChange={(e) =>
-                      setFormData({ ...formData, city: e.target.value })
-                    }
+                    onChange={(e)=>setFormData({...formData,city:e.target.value})}
                   />
 
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-green-600 text-white py-3 rounded-lg flex items-center justify-center gap-2"
+                    className="w-full bg-green-600 text-white py-3 rounded flex justify-center gap-2"
                   >
-                    <Send size={16} />
-                    {isSubmitting ? "Sending..." : "Submit Enquiry"}
+                    <Send size={18}/>
+                    {isSubmitting ? "Sending..." : "Submit"}
                   </button>
 
                 </form>
